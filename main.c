@@ -1,17 +1,18 @@
-#include <curses.h>
+#include "raylib.h"
 
 
 
 int main() {
-    initscr();
+    InitWindow(800, 450, "raylib [core] example - basic window");
 
-    printw("Hello World");
+    while (!WindowShouldClose())
+    {
+        BeginDrawing();
+            ClearBackground(RAYWHITE);
+            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        EndDrawing();
+    }
 
-    refresh();
-
-    getch();
-
-    endwin();
-
+    CloseWindow();
     return 0;
 }

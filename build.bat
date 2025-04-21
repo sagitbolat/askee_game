@@ -12,10 +12,15 @@ for /f "tokens=1-2 delims=:." %%a in ("%TIME%") do set CURTIME=%%a-%%b
 set CURTIME=%CURTIME: =%
 set CURTIME=%CURTIME::=-%
 
+:: Set the verbose level
+set "VERBOSE="
+if "%~2"=="-v" (
+    set "VERBOSE=-v"
+)
 
 set MINGW_INCLUDE=C:\mingw64\include
-set CURSES_INCLUDE=C:\mingw64\lib\pdcurses.a
-
+set RAYLIB_INCLUDE=..\raylib_win\include
+set RAYLIB_LIB=..\raylib_win\lib\
 
 :: === Create Build Directory and Clear Log ===
 mkdir %BUILD_DIR% 2>nul
@@ -31,7 +36,7 @@ echo ===== Build started at %TIME% ===== >> %LOG_FILE%
 :CompileGame
 echo [%TIME%] Compiling executable...
 pushd %BUILD_DIR%
-g++ -Wall -I %MINGW_INCLUDE% ..\%GAME_SOURCE% %CURSES_INCLUDE% -o %1.exe >> ..\%LOG_FILE% 2>&1
+g++ %VERBOSE% -Wall -I%MINGW_INCLUDE% -I%RAYLIB_INCLUDE% ..\%GAME_SOURCE% -L%RAYLIB_LIB% -lraylib -lopengl32 -lgdi32 -lwinmm -o %1.exe >> ..\%LOG_FILE% 2>&1
 if errorlevel 1 (GOTO BuildFailed)
 if errorlevel 0 (echo    +++ 0 Errors +++ >> ..\%LOG_FILE%)
 popd
